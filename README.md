@@ -8,6 +8,10 @@ O visual minimalista foi aprovado como direção de design: preto e tons neutros
 
 **Este repositório ainda contém um protótipo. O backend, a autenticação, o banco de dados e a implantação do MVP não foram implementados.** As alterações da demonstração ficam em memória e são descartadas ao recarregar. Os nomes e tarefas são exemplos.
 
+## Prévia online
+
+Acesse a [prévia privada do Kanban](https://kanban-leonardo-prototipo.leocadete.chatgpt.site) usando a conta proprietária. Publicação confirmada em 28/10/2026. As alterações permanecem em memória; o backend ainda não foi implementado.
+
 ## Abrir em outra máquina
 
 Clone ou baixe este repositório e abra `index.html` em um navegador moderno. O arquivo é autossuficiente; não exige instalação de dependências para a prévia.

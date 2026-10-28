@@ -1,0 +1,13 @@
+{
+  "name": "kanban-cadetetech-preview",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Protótipo visual do gestor Kanban CadeteTech; MVP ainda em planejamento.",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node tests/preview.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

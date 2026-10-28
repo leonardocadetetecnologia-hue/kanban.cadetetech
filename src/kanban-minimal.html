@@ -1,0 +1,258 @@
+<div id="minimal-kanban" aria-label="Kanban minimalista, proposta de interface">
+<style>
+#minimal-kanban{--mk-bg:light-dark(#fff,#181818);--mk-side:light-dark(#f8f8f8,#141414);--mk-text:light-dark(#262626,#e8e8e8);--mk-sub:light-dark(#7d7d7d,#a3a3a3);--mk-border:light-dark(#ebebeb,#333333);--mk-wash:light-dark(#f5f5f5,#262626);--mk-green:light-dark(#171717,#eeeeee);--mk-soft:light-dark(#ededed,#2d2d2d);font-family:Inter,"Segoe UI",sans-serif;font-size:13px;line-height:1.5;color:var(--mk-text)}
+#minimal-kanban *{box-sizing:border-box}
+#minimal-kanban button,#minimal-kanban input,#minimal-kanban textarea{font:inherit}
+#minimal-kanban button{cursor:var(--cursor-interaction,pointer);color:inherit}
+#minimal-kanban .app{border:1px solid var(--mk-border);border-radius:14px;overflow:hidden;background:var(--mk-bg);display:grid;grid-template-columns:170px minmax(0,1fr);position:relative;min-height:706px}
+#minimal-kanban .side{background:var(--mk-side);border-right:1px solid var(--mk-border);padding:22px 12px;display:flex;flex-direction:column;gap:26px}
+#minimal-kanban .brand{padding:0 8px;display:flex;align-items:center;gap:8px;font-weight:650;letter-spacing:-.5px;font-size:16px}
+#minimal-kanban .brand svg{width:20px;height:20px;color:var(--mk-green)}
+#minimal-kanban .side-group{display:grid;gap:4px}
+#minimal-kanban .side-heading{display:flex;justify-content:space-between;color:var(--mk-sub);padding:0 9px 5px;font-size:10px;font-weight:500;letter-spacing:.6px}
+#minimal-kanban .side-link{padding:8px 9px;display:flex;align-items:center;gap:8px;color:var(--mk-sub);font-size:11px;border-radius:6px}
+#minimal-kanban .side-link svg{width:14px;height:14px}
+#minimal-kanban .side-link.active{background:var(--mk-soft);color:var(--mk-green);font-weight:600}
+#minimal-kanban .side-link .number{margin-left:auto;font-size:10px}
+#minimal-kanban .project-dot{width:7px;height:7px;border-radius:2px;background:var(--mk-sub)}
+#minimal-kanban .side-link.active .project-dot{background:var(--mk-green)}
+#minimal-kanban .bottom{margin-top:auto;display:grid;gap:14px}
+#minimal-kanban .person{display:flex;gap:8px;align-items:center;padding:0 9px;font-size:11px}
+#minimal-kanban .person small{display:block;color:var(--mk-sub);font-size:10px}
+#minimal-kanban .avatar{width:25px;height:25px;display:inline-grid;place-items:center;border-radius:50%;font-size:9px;font-weight:600;flex-shrink:0;background:light-dark(#e7e7e7,#3e3e3e);color:light-dark(#606060,#d0d0d0)}
+#minimal-kanban .avatar[data-person="CR"]{background:light-dark(#e7e4ee,#3d374a);color:light-dark(#80738f,#cfbfdf)}
+#minimal-kanban .avatar[data-person="AM"]{background:light-dark(#eee7df,#4b4034);color:light-dark(#9b8469,#e1c4a1)}
+#minimal-kanban main{min-width:0}
+#minimal-kanban .top{height:54px;border-bottom:1px solid var(--mk-border);padding:0 25px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:10px;color:var(--mk-sub)}
+#minimal-kanban .crumb{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#minimal-kanban .crumb svg{width:13px;height:13px}
+#minimal-kanban .crumb strong{font-weight:500;color:var(--mk-text)}
+#minimal-kanban .top-tools{display:flex;gap:12px;align-items:center}
+#minimal-kanban .icon{border:0;padding:3px;background:none;display:inline-flex;align-items:center;justify-content:center;color:var(--mk-sub)}
+#minimal-kanban .icon svg{width:15px;height:15px}
+#minimal-kanban .content{padding:25px 25px 20px}
+#minimal-kanban .heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}
+#minimal-kanban .title-wrap{display:flex;align-items:center;gap:11px}
+#minimal-kanban .project-icon{width:37px;height:37px;display:grid;place-items:center;background:var(--mk-soft);color:var(--mk-green);border:1px solid var(--mk-border);border-radius:10px}
+#minimal-kanban .project-icon svg{width:19px;height:19px}
+#minimal-kanban h2{font-size:21px;line-height:1.25;letter-spacing:-.8px;font-weight:600;margin:0}
+#minimal-kanban .description{font-size:10px;color:var(--mk-sub);margin-top:4px}
+#minimal-kanban .team{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--mk-sub)}
+#minimal-kanban .avatars{display:flex;padding-left:4px}
+#minimal-kanban .avatars .avatar{margin-left:-4px;border:2px solid var(--mk-bg)}
+#minimal-kanban .viewbar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--mk-border);gap:12px}
+#minimal-kanban .views{display:flex;gap:20px}
+#minimal-kanban .view{display:flex;gap:6px;align-items:center;background:none;border:0;border-bottom:2px solid transparent;padding:0 0 13px;font-size:11px;color:var(--mk-sub)}
+#minimal-kanban .view svg{width:13px;height:13px}
+#minimal-kanban .view[aria-pressed="true"]{color:var(--mk-text);border-color:var(--mk-green);font-weight:600}
+#minimal-kanban .primary{border:0;border-radius:6px;background:var(--mk-green);color:light-dark(#fff,#171717);font-size:10px;padding:7px 10px;display:inline-flex;gap:5px;align-items:center;font-weight:500;margin-bottom:9px}
+#minimal-kanban .primary svg{width:12px;height:12px}
+#minimal-kanban .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:17px 0 25px;font-size:10px}
+#minimal-kanban .quiet{border:1px solid var(--mk-border);border-radius:5px;padding:5px 8px;background:var(--mk-bg);display:inline-flex;gap:5px;align-items:center;color:var(--mk-sub);font-size:10px}
+#minimal-kanban .quiet svg{height:12px;width:12px}
+#minimal-kanban .quiet[aria-pressed="true"]{background:var(--mk-soft);color:var(--mk-green)}
+#minimal-kanban .divider{width:1px;height:16px;background:var(--mk-border);margin:0 4px}
+#minimal-kanban .result-count{margin-left:auto;color:var(--mk-sub)}
+#minimal-kanban .board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;min-height:418px}
+#minimal-kanban .col{min-width:0}
+#minimal-kanban .col-head{display:flex;align-items:center;gap:6px;margin-bottom:15px;font-size:10px;font-weight:600}
+#minimal-kanban .status{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--mk-sub);flex-shrink:0}
+#minimal-kanban .status.doing{border-color:light-dark(#b39a60,#cbb373);background:conic-gradient(light-dark(#b39a60,#cbb373) 180deg,transparent 0deg)}
+#minimal-kanban .status.review{border-color:light-dark(#9482b2,#bda1e2);background:conic-gradient(light-dark(#9482b2,#bda1e2) 270deg,transparent 0deg)}
+#minimal-kanban .status.done{background:var(--mk-green);border-color:var(--mk-green)}
+#minimal-kanban .col-count{font-weight:400;color:var(--mk-sub);margin-left:1px}
+#minimal-kanban .wip{font-size:9px;font-weight:400;margin-left:auto;color:var(--mk-sub)}
+#minimal-kanban .task{display:block;width:100%;text-align:left;background:var(--mk-bg);border:1px solid var(--mk-border);border-radius:9px;padding:10px;margin-bottom:9px;box-shadow:0 2px 3px light-dark(#00000003,#0000000d);transition:border-color .15s,box-shadow .15s}
+#minimal-kanban .task:hover{border-color:light-dark(#a3a3a3,#808080);box-shadow:0 3px 9px light-dark(#0000000a,#0000001f)}
+#minimal-kanban .task:focus-visible{outline:2px solid var(--mk-green);outline-offset:2px}
+#minimal-kanban .task-key{display:flex;align-items:center;gap:5px;color:var(--mk-sub);font-size:9px}
+#minimal-kanban .task-type{width:8px;height:8px;border:1px solid var(--mk-sub);border-radius:2px}
+#minimal-kanban .task h3{font-size:11px;line-height:1.5;font-weight:500;letter-spacing:-.1px;margin:8px 0 11px;min-height:33px}
+#minimal-kanban .tag{display:inline-flex;align-items:center;gap:4px;font-size:9px;color:var(--mk-sub)}
+#minimal-kanban .tag::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--mk-sub)}
+#minimal-kanban .task-bottom{display:flex;justify-content:space-between;align-items:center;gap:5px;margin-top:15px}
+#minimal-kanban .task-meta{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--mk-sub)}
+#minimal-kanban .task-meta svg{width:11px;height:11px}
+#minimal-kanban .task-bottom .avatar{width:19px;height:19px;font-size:7px}
+#minimal-kanban .age{color:var(--mk-sub);font-size:8px;margin-left:auto;margin-right:6px}
+#minimal-kanban .task-progress{height:3px;border-radius:3px;background:var(--mk-wash);margin:13px 0 0;overflow:hidden}
+#minimal-kanban .task-progress span{display:block;height:100%;background:var(--mk-green)}
+#minimal-kanban .new-inline{border:0;background:transparent;padding:5px;font-size:10px;color:var(--mk-sub);display:flex;align-items:center;gap:5px}
+#minimal-kanban .new-inline svg{width:11px;height:11px}
+#minimal-kanban .footer{display:flex;justify-content:space-between;gap:10px;color:var(--mk-sub);font-size:9px;border-top:1px solid var(--mk-border);padding-top:12px;margin-top:14px;flex-wrap:wrap}
+#minimal-kanban .overlay{position:absolute;inset:0;background:light-dark(#17171729,#0007);display:flex;justify-content:flex-end;z-index:3}
+#minimal-kanban .drawer{background:var(--mk-bg);border-left:1px solid var(--mk-border);box-shadow:-10px 0 40px #0001;width:min(440px,100%);padding:24px;overflow:auto}
+#minimal-kanban .drawer-top{display:flex;justify-content:space-between;align-items:center;color:var(--mk-sub);font-size:11px;margin-bottom:30px}
+#minimal-kanban .drawer h3{font-size:22px;font-weight:550;letter-spacing:-.6px;margin:0 0 25px;line-height:1.35}
+#minimal-kanban .detail-row{display:grid;grid-template-columns:110px 1fr;font-size:12px;gap:12px;margin:16px 0;align-items:center}
+#minimal-kanban .detail-label{color:var(--mk-sub)}
+#minimal-kanban .detail-section{border-top:1px solid var(--mk-border);margin-top:27px;padding-top:20px}
+#minimal-kanban .detail-section h4{margin:0 0 12px;font-size:12px;font-weight:600}
+#minimal-kanban .detail-section p{font-size:12px;color:var(--mk-sub)}
+#minimal-kanban .check{display:flex;gap:8px;margin:10px 0;font-size:12px;align-items:center}
+#minimal-kanban .list{width:100%;border-collapse:collapse;font-size:11px;min-height:418px}
+#minimal-kanban .list td,#minimal-kanban .list th{text-align:left;border-bottom:1px solid var(--mk-border);padding:12px 5px}
+#minimal-kanban .list th{color:var(--mk-sub);font-weight:400}
+#minimal-kanban .list button{background:none;border:0;text-align:left;font-size:11px}
+#minimal-kanban [hidden]{display:none!important}
+#minimal-kanban .entry{display:grid;gap:10px;margin-top:20px}
+#minimal-kanban .entry input{border:1px solid var(--mk-border);background:var(--mk-bg);color:var(--mk-text);border-radius:6px;padding:10px;width:100%}
+@media(max-width:850px){#minimal-kanban .app{grid-template-columns:135px minmax(0,1fr)}#minimal-kanban .side{padding:20px 7px}#minimal-kanban .content{padding:23px 16px}#minimal-kanban .board{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 14px}#minimal-kanban .col-head{font-size:11px}#minimal-kanban .task h3{font-size:12px}#minimal-kanban .task-key{font-size:10px}#minimal-kanban .team>span{display:none}#minimal-kanban .age{font-size:9px}#minimal-kanban .task-meta{font-size:10px}}
+@media(max-width:520px){#minimal-kanban .app{grid-template-columns:1fr}#minimal-kanban .side{display:none}#minimal-kanban .top{padding:0 16px}#minimal-kanban .heading{align-items:flex-start}#minimal-kanban .team{display:none}#minimal-kanban .content{padding:22px 14px}#minimal-kanban .board{grid-template-columns:1fr}#minimal-kanban .views{gap:15px}#minimal-kanban .task h3{min-height:0;font-size:13px}#minimal-kanban .task{padding:14px}#minimal-kanban .task-key,#minimal-kanban .tag,#minimal-kanban .task-meta,#minimal-kanban .age{font-size:11px}#minimal-kanban .col-head{font-size:12px}#minimal-kanban .quiet{font-size:11px}#minimal-kanban .top-tools{display:none}#minimal-kanban .list td:nth-child(3),#minimal-kanban .list th:nth-child(3){display:none}#minimal-kanban .drawer{padding:20px}#minimal-kanban .overlay{position:fixed}#minimal-kanban .drawer{max-height:100dvh}#minimal-kanban button{min-height:32px}#minimal-kanban .task-bottom .avatar{height:24px;width:24px;font-size:9px}}
+@media(prefers-reduced-motion:reduce){#minimal-kanban .task{transition:none}}
+#minimal-kanban .drawer{width:min(520px,100%);max-height:900px;padding:24px 28px}
+#minimal-kanban .drawer h3{margin-bottom:18px}
+#minimal-kanban .priority-mark{margin-left:auto;display:flex;gap:2px;align-items:flex-end;height:11px}
+#minimal-kanban .priority-mark i{display:block;width:2px;background:var(--mk-border)}
+#minimal-kanban .priority-mark i:nth-child(1){height:4px}#minimal-kanban .priority-mark i:nth-child(2){height:7px}#minimal-kanban .priority-mark i:nth-child(3){height:10px}
+#minimal-kanban .priority-mark i.filled{background:var(--mk-sub)}
+#minimal-kanban .progress-label{display:flex;align-items:center;justify-content:space-between;font-size:9px;color:var(--mk-sub);margin-top:15px;gap:6px}
+#minimal-kanban .progress-label>span{display:flex;gap:4px;align-items:center}
+#minimal-kanban .progress-label svg{height:11px;width:11px}
+#minimal-kanban .task-progress{margin-top:6px;height:4px}
+#minimal-kanban .counts{display:flex;align-items:center;gap:8px;font-size:9px;color:var(--mk-sub);margin-top:12px}
+#minimal-kanban .counts span{display:flex;align-items:center;gap:3px}#minimal-kanban .counts svg{height:11px;width:11px}
+#minimal-kanban .card-epic{font-size:9px;color:var(--mk-sub);border-bottom:1px solid var(--mk-border);padding-bottom:8px;margin-bottom:9px;display:flex;gap:4px;align-items:center}
+#minimal-kanban .card-epic svg{width:10px;height:10px}
+#minimal-kanban .deadline-warning{color:light-dark(#a75b35,#e7ac8c)!important}
+#minimal-kanban .panel-intro{color:var(--mk-sub);font-size:11px;margin-bottom:20px}
+#minimal-kanban .properties{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin:20px 0 24px}
+#minimal-kanban .property label,#minimal-kanban .property .prop-label{display:block;color:var(--mk-sub);font-size:10px;margin-bottom:5px}
+#minimal-kanban select,#minimal-kanban input[type="date"]{background:var(--mk-bg);color:var(--mk-text);border:1px solid var(--mk-border);padding:7px;border-radius:6px;width:100%;min-width:0;font-size:11px}
+#minimal-kanban .property .prop-value{display:flex;align-items:center;gap:6px;font-size:12px;min-height:32px}
+#minimal-kanban .detail-progress{padding:14px;background:var(--mk-wash);border-radius:8px;margin:19px 0}
+#minimal-kanban .detail-progress .progress-label{margin:0;font-size:11px}#minimal-kanban .detail-progress .task-progress{background:var(--mk-border);height:5px;margin-top:10px}
+#minimal-kanban .panel-tabs{display:flex;gap:20px;border-bottom:1px solid var(--mk-border);margin:25px 0 20px}
+#minimal-kanban .panel-tabs button{padding:0 0 10px;background:none;border:0;border-bottom:2px solid transparent;font-size:11px;color:var(--mk-sub)}
+#minimal-kanban .panel-tabs button[aria-pressed="true"]{color:var(--mk-text);border-bottom-color:var(--mk-text)}
+#minimal-kanban .block{margin-top:24px}#minimal-kanban .block h4{font-size:12px;font-weight:600;margin:0 0 12px;display:flex;justify-content:space-between;gap:8px}
+#minimal-kanban .block .secondary{font-size:10px;font-weight:400;color:var(--mk-sub)}
+#minimal-kanban .note{font-size:12px;color:var(--mk-sub);line-height:1.7;margin:0}
+#minimal-kanban .check-row{padding:10px 0;border-bottom:1px solid var(--mk-border);display:grid;grid-template-columns:18px 1fr;gap:7px;align-items:start}
+#minimal-kanban .check-row input[type="checkbox"]{accent-color:var(--mk-green);margin:4px 0;width:14px;height:14px;cursor:var(--cursor-interaction,pointer)}
+#minimal-kanban .check-row label{font-size:12px;display:block;cursor:var(--cursor-interaction,pointer)}
+#minimal-kanban .check-row.is-done label{text-decoration:line-through;color:var(--mk-sub)}
+#minimal-kanban .check-extras{display:flex;gap:7px;margin-top:6px;align-items:center}
+#minimal-kanban .check-extras select{max-width:105px;padding:3px 5px;font-size:10px}
+#minimal-kanban .check-extras input{max-width:127px;padding:3px 5px;font-size:10px}
+#minimal-kanban .inline-form{display:flex;align-items:center;gap:7px;margin:12px 0}
+#minimal-kanban .inline-form input,#minimal-kanban textarea{min-width:0;flex:1;border:1px solid var(--mk-border);background:var(--mk-bg);color:var(--mk-text);border-radius:6px;padding:8px 10px;font-size:11px}
+#minimal-kanban .inline-form .quiet{white-space:nowrap}
+#minimal-kanban .subtask{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--mk-border);padding:10px 0;font-size:11px}
+#minimal-kanban .subtask button{border:0;background:none;text-align:left;padding:0;flex:1;font-size:11px}
+#minimal-kanban .subtask .sub-key{color:var(--mk-sub);font-size:9px;display:block;margin-bottom:3px}
+#minimal-kanban .attachment{padding:10px 12px;border:1px solid var(--mk-border);border-radius:7px;display:flex;gap:10px;align-items:center;font-size:11px;margin:9px 0}
+#minimal-kanban .attachment svg{height:18px;width:18px;color:var(--mk-sub)}
+#minimal-kanban .attachment small{display:block;font-size:9px;color:var(--mk-sub);margin-top:3px}
+#minimal-kanban .attachment span{min-width:0;overflow-wrap:anywhere}
+#minimal-kanban .comment{display:flex;gap:9px;margin:18px 0}
+#minimal-kanban .comment-content{min-width:0;flex:1;font-size:12px;overflow-wrap:anywhere}
+#minimal-kanban .comment-content small{font-size:10px;color:var(--mk-sub);margin-left:7px}
+#minimal-kanban .comment-content p{margin:7px 0 0;line-height:1.7}
+#minimal-kanban .comment-form{display:grid;gap:8px;margin-top:22px}#minimal-kanban textarea{resize:vertical;width:100%;min-height:80px}
+#minimal-kanban .comment-form .primary{justify-self:end;margin:0}
+#minimal-kanban .event{display:grid;grid-template-columns:8px 1fr;gap:12px;padding:11px 0;font-size:11px}
+#minimal-kanban .event-dot{height:5px;width:5px;border-radius:50%;background:var(--mk-sub);margin-top:6px}
+#minimal-kanban .event small{display:block;color:var(--mk-sub);font-size:10px;margin-top:4px}
+#minimal-kanban .panel-message{color:var(--mk-sub);font-size:10px;border-top:1px solid var(--mk-border);padding-top:14px;margin-top:26px}
+@media(max-width:520px){#minimal-kanban .drawer{padding:20px;max-height:100dvh}#minimal-kanban .progress-label,#minimal-kanban .counts,#minimal-kanban .card-epic{font-size:11px}#minimal-kanban .check-extras{flex-wrap:wrap}#minimal-kanban select,#minimal-kanban input,#minimal-kanban textarea{font-size:16px!important}#minimal-kanban .properties{gap:15px 10px}}
+</style>
+<div class="app">
+<aside class="side"><div class="brand"><i data-lucide="command" aria-hidden="true"></i>Projetos</div><div class="side-group"><div class="side-link"><i data-lucide="search" aria-hidden="true"></i>Busca</div><div class="side-link"><i data-lucide="inbox" aria-hidden="true"></i>Inbox<span class="number">3</span></div><div class="side-link"><i data-lucide="circle-check" aria-hidden="true"></i>Meu trabalho</div></div><div class="side-group"><div class="side-heading">PROJETOS</div><div class="side-link active"><span class="project-dot"></span>Produto digital</div><div class="side-link"><span class="project-dot"></span>Operações</div><div class="side-link"><span class="project-dot"></span>Atendimento</div></div><div class="bottom"><div class="side-link"><i data-lucide="settings-2" aria-hidden="true"></i>Configurações</div><div class="person"><span class="avatar">LC</span><div>Leonardo<small>Workspace da equipe</small></div></div></div></aside>
+<main><div class="top"><div class="crumb"><i data-lucide="layers" aria-hidden="true"></i><span>Projetos</span><span>/</span><strong>Produto digital</strong></div><div class="top-tools"><span>Privado</span><i data-lucide="lock-keyhole" aria-hidden="true"></i></div></div><div class="content"><div class="heading"><div class="title-wrap"><div class="project-icon"><i data-lucide="box" aria-hidden="true"></i></div><div><h2>Produto digital</h2><div class="description">Do planejamento à entrega, em um só lugar.</div></div></div><div class="team"><div class="avatars"><span class="avatar">LC</span><span class="avatar" data-person="CR">CR</span><span class="avatar" data-person="AM">AM</span></div><span>3 membros</span></div></div><div class="viewbar"><div class="views"><button class="view" type="button" data-view="board" aria-pressed="true"><i data-lucide="columns-3" aria-hidden="true"></i>Quadro</button><button class="view" type="button" data-view="list" aria-pressed="false"><i data-lucide="list" aria-hidden="true"></i>Lista</button></div><button class="primary" type="button" data-new><i data-lucide="plus" aria-hidden="true"></i>Nova tarefa</button></div><div class="toolbar"><button class="quiet" type="button" id="mk-mine" aria-pressed="false"><i data-lucide="user-round" aria-hidden="true"></i>Minhas tarefas</button><span class="divider"></span><button class="quiet" type="button" id="mk-sort" aria-pressed="false"><i data-lucide="arrow-down-wide-narrow" aria-hidden="true"></i>Prioridade</button><span class="result-count" aria-live="polite">8 tarefas</span></div><div class="board"></div><table class="list" hidden><thead><tr><th>Tarefa</th><th>Status</th><th>Responsável</th></tr></thead><tbody></tbody></table><div class="footer"><span>Dados de exemplo · prévia do design</span><span>Selecione um cartão para ver os detalhes</span></div></div></main>
+<div class="overlay" hidden><section class="drawer" role="dialog" aria-modal="true" aria-label="Detalhe da tarefa"><div class="drawer-top"><span class="drawer-key"></span><button class="icon" type="button" aria-label="Fechar detalhe" data-close><i data-lucide="x" aria-hidden="true"></i></button></div><div class="drawer-content"></div></section></div>
+</div>
+<script>
+(()=>{
+const root=document.getElementById('minimal-kanban');
+const safe=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cols=[['A fazer','',null],['Em andamento','doing',5],['Em revisão','review',3],['Concluído','done',null]];
+const names={LC:'Leonardo Cadete',CR:'Carolina Rocha',AM:'André Martins'};
+const tasks=[
+{key:'PROD-12',title:'Mapear necessidades dos usuários',tag:'Pesquisa',owner:'LC',due:'2026-11-12',age:'2d',column:0,priority:2,steps:['Preparar roteiro','Conversar com os usuários','Consolidar descobertas'],checked:0,epic:'Descoberta do produto'},
+{key:'PROD-18',title:'Definir critérios de aceite',tag:'Produto',owner:'AM',due:'2026-11-14',age:'1d',column:0,priority:3,steps:[],checked:0},
+{key:'PROD-08',title:'Criar protótipo da tela principal',tag:'Design',owner:'CR',due:'2026-10-29',age:'3d',column:1,priority:1,steps:['Mapear a navegação','Desenhar os cartões','Criar o painel de detalhe','Revisar no celular','Validar com a equipe'],checked:3,epic:'Experiência do produto'},
+{key:'PROD-14',title:'Ajustar carregamento das tarefas',tag:'Correção',owner:'LC',due:'2026-11-11',age:'1d',column:1,priority:1,steps:['Reproduzir a lentidão','Revisar a consulta','Medir o carregamento','Validar a correção'],checked:1},
+{key:'PROD-05',title:'Validar navegação no celular',tag:'Design',owner:'CR',due:'2026-11-09',age:'2d',column:2,priority:2,steps:['Testar menus','Revisar formulários','Testar o painel','Validar os filtros'],checked:3},
+{key:'PROD-11',title:'Documentar regras de acesso',tag:'Documentação',owner:'AM',due:'2026-11-11',age:'1d',column:2,priority:3,steps:['Descrever os papéis','Revisar as permissões','Validar com a equipe'],checked:2},
+{key:'PROD-02',title:'Alinhar objetivos com a equipe',tag:'Produto',owner:'LC',due:'2026-10-26',age:'',column:3,priority:2,steps:['Reunir a equipe','Registrar os objetivos'],checked:2},
+{key:'PROD-03',title:'Organizar requisitos iniciais',tag:'Planejamento',owner:'AM',due:'2026-10-27',age:'',column:3,priority:3,steps:['Listar requisitos','Separar as fases','Validar o escopo'],checked:3}
+];
+let seq=30,mine=false,sort=false,lastFocus=null,active=null,tab='details';
+const overlay=root.querySelector('.overlay'),content=root.querySelector('.drawer-content');
+function init(t){t.checklist=t.steps.map((text,i)=>({id:'check-'+t.key+'-'+i,text,done:i<t.checked,owner:t.owner,due:t.due}));t.subtasks=[];t.comments=[];t.attachments=[];t.events=[{text:'Tarefa criada no projeto Produto digital',when:'Histórico de exemplo'}];t.description='Organizar a entrega com a equipe, validar os critérios de aceite e registrar o resultado.';return t}
+tasks.forEach(init);
+const featured=tasks[2];featured.description='Desenhar uma experiência simples para acompanhar o trabalho da equipe. O quadro deve priorizar leitura rápida, progresso e acesso aos detalhes sem perder o contexto.';
+featured.comments=[{owner:'LC',body:'Vamos manter o quadro limpo e deixar os detalhes no painel lateral.',when:'Exemplo · há 2 horas'},{owner:'CR',body:'A navegação e os cartões estão prontos. Falta validar o painel e a experiência no celular.',when:'Exemplo · há 35 min'}];
+featured.attachments=[{name:'referencia-do-quadro.png',size:'248 KB',source:'Referência ilustrativa'}];
+featured.subtasks=[{key:'PROD-24',title:'Revisar o painel no celular',done:false,owner:'CR'},{key:'PROD-25',title:'Validar contraste e foco',done:true,owner:'LC'}];
+function icon(name){return '<i data-lucide="'+name+'" aria-hidden="true"></i>'}
+function icons(){if(globalThis.lucide)lucide.createIcons()}
+function dateLabel(t){return t.column===3?'Concluído':t.due?new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'short',timeZone:'UTC'}).format(new Date(t.due+'T12:00:00Z')).replace('.',''):'Sem data'}
+function progress(t){const done=t.checklist.filter(c=>c.done).length,total=t.checklist.length;return {done,total,pct:total?Math.round(done/total*100):0}}
+function progressHTML(t,panel=false){const p=progress(t);if(!p.total)return '';return '<div class="'+(panel?'detail-progress':'progress-wrap')+'"><div class="progress-label"><span>'+icon('list-checks')+(panel?'Checklist':'')+' '+p.done+'/'+p.total+'</span><span>'+p.pct+'%</span></div><div class="task-progress" role="progressbar" aria-label="Progresso do checklist" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+p.pct+'"><span style="width:'+p.pct+'%"></span></div></div>'}
+function priority(t){const fill=4-t.priority;return '<span class="priority-mark" aria-label="Prioridade '+(t.priority===1?'alta':t.priority===2?'média':'baixa')+'">'+[1,2,3].map(n=>'<i class="'+(n<=fill?'filled':'')+'"></i>').join('')+'</span>'}
+function log(t,text){t.events.unshift({text,when:'Agora · nesta prévia'})}
+function options(selected,none=false){return (none?'<option value="">Sem responsável</option>':'')+Object.entries(names).map(([key,name])=>'<option value="'+key+'" '+(selected===key?'selected':'')+'>'+name.split(' ')[0]+'</option>').join('')}
+function show(){overlay.hidden=false;icons();root.querySelector('[data-close]').focus()}
+function openTask(t){lastFocus=document.activeElement;active=t;tab='details';paintPanel();show()}
+function close(){overlay.hidden=true;active=null;if(lastFocus?.isConnected)lastFocus.focus();else root.querySelector('[data-new]').focus()}
+function render(){
+ const board=root.querySelector('.board'),tbody=root.querySelector('tbody');board.replaceChildren();tbody.replaceChildren();
+ const visible=tasks.filter(t=>!mine||t.owner==='LC');root.querySelector('.result-count').textContent=visible.length+' tarefas';
+ cols.forEach((col,index)=>{const section=document.createElement('section');section.className='col';const filtered=visible.filter(t=>t.column===index);if(sort)filtered.sort((a,b)=>a.priority-b.priority);
+ section.innerHTML='<div class="col-head"><span class="status '+col[1]+'"></span>'+col[0]+'<span class="col-count">'+filtered.length+'</span>'+(col[2]?'<span class="wip">'+tasks.filter(t=>t.column===index).length+' / '+col[2]+'</span>':'')+'</div>';
+ filtered.forEach(t=>{const card=document.createElement('button');card.type='button';card.className='task';card.setAttribute('aria-label',t.key+': '+t.title);const children=t.subtasks.length;
+ card.innerHTML=(t.epic?'<div class="card-epic">'+icon('layers-2')+safe(t.epic)+'</div>':'')+'<div class="task-key"><span class="task-type"></span>'+safe(t.key)+priority(t)+'</div><h3>'+safe(t.title)+'</h3><span class="tag">'+safe(t.tag)+'</span>'+progressHTML(t)+'<div class="counts">'+(children?'<span>'+icon('git-branch')+t.subtasks.filter(s=>s.done).length+'/'+children+'</span>':'')+(t.comments.length?'<span>'+icon('message-square')+t.comments.length+'</span>':'')+(t.attachments.length?'<span>'+icon('paperclip')+t.attachments.length+'</span>':'')+'</div><div class="task-bottom"><span class="task-meta '+(t.due==='2026-10-29'&&t.column!==3?'deadline-warning':'')+'">'+icon(t.column===3?'check':'calendar-days')+dateLabel(t)+'</span><span class="age" aria-label="'+safe(t.age)+' na coluna">'+safe(t.age)+'</span><span class="avatar" data-person="'+t.owner+'">'+t.owner+'</span></div>';
+ card.addEventListener('click',()=>openTask(t));section.appendChild(card)});
+ const add=document.createElement('button');add.type='button';add.className='new-inline';add.innerHTML=icon('plus')+'Adicionar tarefa';add.addEventListener('click',()=>newTask(index));section.appendChild(add);board.appendChild(section)});
+ visible.forEach(t=>{const tr=document.createElement('tr');const td=document.createElement('td');const button=document.createElement('button');button.textContent=t.key+' · '+t.title;button.addEventListener('click',()=>openTask(t));td.appendChild(button);tr.appendChild(td);[cols[t.column][0],names[t.owner]].forEach(text=>{const cell=document.createElement('td');cell.textContent=text;tr.appendChild(cell)});tbody.appendChild(tr)});icons()
+}
+function paintPanel(){
+ const t=active;if(!t)return;root.querySelector('.drawer-key').textContent=t.key+' / '+t.tag;
+ content.innerHTML='<h3>'+safe(t.title)+'</h3><div class="panel-intro">'+(t.epic?safe(t.epic):'Produto digital')+'</div><div class="properties"><div class="property"><span class="prop-label">Status</span><span class="prop-value"><span class="status '+cols[t.column][1]+'"></span>'+cols[t.column][0]+'</span></div><div class="property"><label for="mk-owner">Responsável</label><select id="mk-owner">'+options(t.owner)+'</select></div><div class="property"><label for="mk-priority">Prioridade</label><select id="mk-priority">'+[[1,'Alta'],[2,'Média'],[3,'Baixa']].map(([v,name])=>'<option value="'+v+'" '+(v===t.priority?'selected':'')+'>'+name+'</option>').join('')+'</select></div><div class="property"><label for="mk-due">Data de entrega</label><input id="mk-due" type="date" value="'+t.due+'"></div></div>'+progressHTML(t,true)+'<div class="panel-tabs">'+[['details','Detalhes'],['comments','Comentários · '+t.comments.length],['activity','Atividade']].map(([id,title])=>'<button type="button" data-tab="'+id+'" aria-pressed="'+(tab===id)+'">'+title+'</button>').join('')+'</div><div class="panel-body"></div><div class="panel-message" aria-live="polite">Prévia interativa · alterações válidas apenas durante esta demonstração.</div>';
+ content.querySelector('#mk-owner').addEventListener('change',e=>{t.owner=e.target.value;log(t,'Responsável alterado para '+names[t.owner]);render();notice('Responsável atualizado na prévia.')});
+ content.querySelector('#mk-priority').addEventListener('change',e=>{t.priority=Number(e.target.value);log(t,'Prioridade alterada');render();notice('Prioridade atualizada na prévia.')});
+ content.querySelector('#mk-due').addEventListener('change',e=>{t.due=e.target.value;log(t,'Prazo alterado para '+(t.due||'sem data'));render();notice('Prazo atualizado na prévia.')});
+ content.querySelectorAll('[data-tab]').forEach(button=>button.addEventListener('click',()=>{tab=button.dataset.tab;paintPanel();content.querySelector('[data-tab="'+tab+'"]').focus()}));
+ const body=content.querySelector('.panel-body');
+ if(tab==='details')paintDetails(body,t);else if(tab==='comments')paintComments(body,t);else paintActivity(body,t);icons()
+}
+function notice(text){content.querySelector('.panel-message').textContent=text+' Alterações somente nesta demonstração.'}
+function refreshPanel(focusSelector){const scroll=root.querySelector('.drawer').scrollTop;render();paintPanel();root.querySelector('.drawer').scrollTop=scroll;if(focusSelector)content.querySelector(focusSelector)?.focus()}
+function paintDetails(body,t){
+ body.innerHTML='<section class="block" style="margin-top:0"><h4>Descrição</h4><p class="note">'+safe(t.description)+'</p></section><section class="block"><h4>Checklist <span class="secondary">'+progress(t).done+' de '+progress(t).total+' concluídos</span></h4><div class="checklist-rows"></div><form class="inline-form" id="mk-add-check"><input aria-label="Novo passo do checklist" placeholder="Adicionar um passo…" maxlength="180" required><button class="quiet" type="submit">Adicionar</button></form></section><section class="block"><h4>Subtarefas <span class="secondary">'+t.subtasks.filter(s=>s.done).length+'/'+t.subtasks.length+'</span></h4><div class="subtask-rows"></div><form class="inline-form" id="mk-add-sub"><input aria-label="Título da subtarefa" placeholder="Adicionar subtarefa…" maxlength="180" required><button class="quiet" type="submit">Adicionar</button></form></section><section class="block"><h4>Anexos <span class="secondary">'+t.attachments.length+'</span></h4><div class="attachment-rows"></div><label class="quiet" style="display:inline-flex;cursor:var(--cursor-interaction,pointer)">'+icon('paperclip')+'Selecionar arquivo<input id="mk-file" type="file" style="max-width:180px;font-size:10px"></label><p class="description">Somente nome e tamanho são exibidos nesta prévia.</p></section>';
+ t.checklist.forEach(c=>{const row=document.createElement('div');row.className='check-row'+(c.done?' is-done':'');row.innerHTML='<input id="'+c.id+'" type="checkbox" '+(c.done?'checked':'')+'><div><label for="'+c.id+'">'+safe(c.text)+'</label><div class="check-extras"><select aria-label="Responsável: '+safe(c.text)+'">'+options(c.owner,true)+'</select><input type="date" value="'+c.due+'" aria-label="Prazo: '+safe(c.text)+'"></div></div>';
+ row.querySelector('input[type="checkbox"]').addEventListener('change',e=>{c.done=e.target.checked;log(t,(c.done?'Concluiu: ':'Reabriu: ')+c.text);refreshPanel('#'+c.id)});
+ row.querySelector('select').addEventListener('change',e=>{c.owner=e.target.value;log(t,'Responsável do passo atualizado: '+c.text);notice('Responsável do passo atualizado.')});
+ row.querySelector('input[type="date"]').addEventListener('change',e=>{c.due=e.target.value;log(t,'Prazo do passo atualizado: '+c.text);notice('Prazo do passo atualizado.')});body.querySelector('.checklist-rows').appendChild(row)});
+ body.querySelector('#mk-add-check').addEventListener('submit',e=>{e.preventDefault();const input=e.currentTarget.querySelector('input'),text=input.value.trim();if(!text)return;t.checklist.push({id:'check-'+seq++,text,done:false,owner:t.owner,due:''});log(t,'Adicionou um passo: '+text);refreshPanel('#mk-add-check input')});
+ if(!t.subtasks.length)body.querySelector('.subtask-rows').innerHTML='<p class="note">Divida entregas maiores em tarefas menores.</p>';
+ t.subtasks.forEach((sub,i)=>{const row=document.createElement('div');row.className='subtask';row.innerHTML='<span class="status '+(sub.done?'done':'')+'"></span><button type="button" id="mk-sub-'+i+'" aria-pressed="'+sub.done+'" aria-label="'+(sub.done?'Reabrir':'Concluir')+' subtarefa: '+safe(sub.title)+'"><span class="sub-key">'+sub.key+'</span>'+safe(sub.title)+'</button><span class="avatar" data-person="'+sub.owner+'">'+sub.owner+'</span>';row.querySelector('button').addEventListener('click',()=>{sub.done=!sub.done;log(t,(sub.done?'Concluiu':'Reabriu')+' a subtarefa '+sub.key);refreshPanel('#mk-sub-'+i)});body.querySelector('.subtask-rows').appendChild(row)});
+ body.querySelector('#mk-add-sub').addEventListener('submit',e=>{e.preventDefault();const title=e.currentTarget.querySelector('input').value.trim();if(!title)return;const key='PROD-'+seq++;t.subtasks.push({key,title,done:false,owner:t.owner});log(t,'Criou a subtarefa '+key);refreshPanel('#mk-add-sub input')});
+ const attachments=body.querySelector('.attachment-rows');if(!t.attachments.length)attachments.innerHTML='<p class="note">Reúna referências e documentos da tarefa.</p>';
+ t.attachments.forEach(a=>{const row=document.createElement('div');row.className='attachment';row.innerHTML=icon('file')+'<span>'+safe(a.name)+'<small>'+safe(a.size)+' · '+safe(a.source)+'</small></span>';attachments.appendChild(row)});
+ body.querySelector('#mk-file').addEventListener('change',e=>{const file=e.target.files?.[0];if(!file)return;t.attachments.push({name:file.name,size:Math.max(1,Math.round(file.size/1024))+' KB',source:'Selecionado localmente; sem upload'});log(t,'Adicionou referência de arquivo: '+file.name);refreshPanel('#mk-file')})
+}
+function paintComments(body,t){
+ const list=document.createElement('div');body.appendChild(list);if(!t.comments.length)list.innerHTML='<p class="note">Inicie a conversa sobre esta tarefa.</p>';
+ t.comments.forEach(c=>{const row=document.createElement('article');row.className='comment';row.innerHTML='<span class="avatar" data-person="'+c.owner+'">'+c.owner+'</span><div class="comment-content"><span>'+names[c.owner].split(' ')[0]+'</span><small>'+safe(c.when)+'</small><p>'+safe(c.body)+'</p></div>';list.appendChild(row)});
+ const form=document.createElement('form');form.className='comment-form';form.innerHTML='<label for="mk-comment" class="description">Adicionar comentário</label><textarea id="mk-comment" placeholder="Escreva para a equipe…" maxlength="2000" required></textarea><button class="primary" type="submit">Comentar</button>';form.addEventListener('submit',e=>{e.preventDefault();const text=form.querySelector('textarea').value.trim();if(!text)return;t.comments.push({owner:'LC',body:text,when:'Agora'});log(t,'Leonardo adicionou um comentário');refreshPanel('#mk-comment')});body.appendChild(form)
+}
+function paintActivity(body,t){t.events.forEach(event=>{const row=document.createElement('div');row.className='event';row.innerHTML='<span class="event-dot"></span><div>'+safe(event.text)+'<small>'+safe(event.when)+'</small></div>';body.appendChild(row)})}
+function newTask(column=0){lastFocus=document.activeElement;active=null;root.querySelector('.drawer-key').textContent='Nova tarefa · demonstração';content.innerHTML='<h3>O que precisa ser feito?</h3><form class="entry"><label for="mk-title">Título da tarefa</label><input id="mk-title" required maxlength="180" placeholder="Ex.: Revisar a proposta visual"><button class="primary" type="submit">Adicionar à prévia</button><p class="description">A tarefa fica somente nesta demonstração.</p></form>';content.querySelector('form').addEventListener('submit',e=>{e.preventDefault();const title=content.querySelector('input').value.trim();if(!title)return;const t=init({key:'PROD-'+seq++,title,tag:'Produto',owner:'LC',due:'',age:'0d',column,priority:2,steps:[],checked:0});tasks.push(t);render();active=t;tab='details';paintPanel()});overlay.hidden=false;content.querySelector('input').focus()}
+root.querySelector('[data-close]').addEventListener('click',close);overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
+root.addEventListener('keydown',e=>{if(overlay.hidden)return;if(e.key==='Escape')close();if(e.key==='Tab'){const els=[...overlay.querySelectorAll('button,input,select,textarea')].filter(el=>!el.disabled&&el.getClientRects().length);const first=els[0],last=els.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
+root.querySelector('[data-new]').addEventListener('click',()=>newTask());
+root.querySelector('#mk-mine').addEventListener('click',e=>{mine=!mine;e.currentTarget.setAttribute('aria-pressed',String(mine));render()});
+root.querySelector('#mk-sort').addEventListener('click',e=>{sort=!sort;e.currentTarget.setAttribute('aria-pressed',String(sort));render()});
+root.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>{root.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));root.querySelector('.board').hidden=button.dataset.view!=='board';root.querySelector('.list').hidden=button.dataset.view!=='list'}));
+render();
+if(globalThis.Tweak){const state={radius:9,spacing:10};const tweak=new Tweak({container:root,onChange:()=>root.querySelectorAll('.task').forEach(t=>{t.style.borderRadius=state.radius+'px';t.style.padding=state.spacing+'px'})});tweak.addSlider(state,'radius',{label:'Cantos dos cartões',min:0,max:16,unit:'px'});tweak.addSlider(state,'spacing',{label:'Respiro nos cartões',min:10,max:20,unit:'px'})}
+})();
+</script>
+</div>
+
+
+
+
